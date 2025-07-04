@@ -10,10 +10,12 @@ class RedisCache:
             # Test connection
             self.redis_client.ping()
             self.is_available = True
+            print("Redis cache initialized successfully.")
         except Exception as e:
             print(f"Redis connection failed: {e}")
             self.redis_client = None
             self.is_available = False
+            print("Redis cache is not available.")
     
     def get(self, key: str) -> Optional[Any]:
         """Get value from cache"""
@@ -23,7 +25,10 @@ class RedisCache:
         try:
             value = self.redis_client.get(key)
             if value:
+                print(f"[INFO] Cache hit for key: {key}")
                 return json.loads(value)
+            else:
+                print(f"[INFO] Cache miss for key: {key}")
         except Exception as e:
             print(f"Cache get error: {e}")
         return None
@@ -32,6 +37,7 @@ class RedisCache:
         """Set value in cache with expiration (default 5 minutes)"""
         if not self.is_available:
             return False
+        print(f"[INFO] Setting cache for key: {key}")
         
         try:
             serialized_value = json.dumps(value, default=str)
