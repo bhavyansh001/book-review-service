@@ -52,55 +52,42 @@ const BookDetail: React.FC = () => {
   if (!book) return <ErrorMessage message="Book not found" />;
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-10">
       {/* Book Details */}
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <div className="flex justify-between items-start mb-6">
-          <div className="flex-1">
-            <h1 className="text-3xl font-bold text-gray-900 mb-2">{book.title}</h1>
-            <p className="text-xl text-gray-600 mb-4">by {book.author}</p>
-            
-            <div className="space-y-2 text-sm text-gray-500">
-              {book.publication_year && (
-                <p>Published: {book.publication_year}</p>
-              )}
-              {book.isbn && (
-                <p>ISBN: {book.isbn}</p>
-              )}
-              <p>Added: {new Date(book.created_at).toLocaleDateString()}</p>
-              {book.updated_at && (
-                <p>Updated: {new Date(book.updated_at).toLocaleDateString()}</p>
-              )}
-            </div>
-          </div>
-          
-          <div className="flex space-x-2">
+      <div className="bg-white/80 backdrop-blur-md rounded-2xl shadow-2xl p-8 flex flex-col md:flex-row gap-8 border border-white/40">
+        <div className="flex-1">
+          <h1 className="text-4xl font-extrabold text-gray-900 mb-2 flex items-center gap-2">
+            <svg className="h-8 w-8 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+            {book.title}
+          </h1>
+          <p className="text-lg text-gray-600 mb-1">by <span className="font-semibold">{book.author}</span></p>
+          <p className="text-sm text-gray-400 mb-4">{book.publication_year ? `${book.publication_year}` : ''}</p>
+          <p className="text-gray-700 mb-6 whitespace-pre-line">{book.description || <span className="italic text-gray-400">No description provided.</span>}</p>
+          <div className="flex flex-wrap gap-4 mt-4">
             <Link
               to={`/books/${book.id}/edit`}
-              className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
+              className="px-5 py-2 rounded-md bg-yellow-400 text-white font-semibold hover:bg-yellow-500 transition-colors shadow"
             >
-              Edit
+              Edit Book
             </Link>
             <button
               onClick={handleDelete}
-              className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
+              className="px-5 py-2 rounded-md bg-red-500 text-white font-semibold hover:bg-red-600 transition-colors shadow"
             >
-              Delete
+              Delete Book
             </button>
+            <Link
+              to="/"
+              className="px-5 py-2 rounded-md border border-gray-300 text-gray-700 bg-white hover:bg-gray-100 transition-colors"
+            >
+              Back to Books
+            </Link>
           </div>
         </div>
-        
-        {book.description && (
-          <div>
-            <h2 className="text-lg font-semibold text-gray-900 mb-3">Description</h2>
-            <p className="text-gray-700 leading-relaxed">{book.description}</p>
-          </div>
-        )}
       </div>
-
-      {/* Reviews Section */}
-      <div className="bg-white rounded-lg shadow-md p-6">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">Reviews</h2>
+      {/* Reviews */}
+      <div>
+        <h2 className="text-2xl font-bold text-gray-900 mb-4">Reviews</h2>
         <ReviewList bookId={book.id} />
       </div>
     </div>
