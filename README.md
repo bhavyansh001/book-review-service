@@ -23,6 +23,7 @@ A professional-grade backend API for a Book Review application, built with FastA
 - [Troubleshooting](#troubleshooting)
 - [Frontend Setup & Running](#frontend-setup--running)
 - [Running Both Backend & Frontend Together (Dev)](#running-both-backend--frontend-together-dev)
+- [Dockerized Deployment (Recommended)](#dockerized-deployment-recommended)
 
 ---
 
@@ -225,7 +226,7 @@ npm install
 npm run dev
 ```
 
-The frontend will be available at: [http://localhost:5173](http://localhost:5173)
+The app will be available at: [http://localhost:5173](http://localhost:5173)
 
 ---
 
@@ -240,5 +241,49 @@ A helper script is provided at the project root to run both services in developm
 - This will start the backend (FastAPI) and frontend (Vite) concurrently.
 - Make sure you have installed backend and frontend dependencies first.
 - Press Ctrl+C to stop both services.
+
+---
+
+## Dockerized Deployment
+
+### Prerequisites
+- [Docker](https://docs.docker.com/get-docker/) and [Docker Compose](https://docs.docker.com/compose/install/) installed
+- No other services running on ports 80, 8000, 5432, or 6379
+
+### 1. Build and Start All Services
+
+From the project root:
+
+```bash
+docker-compose up --build
+```
+
+- This will build and start:
+  - PostgreSQL (with persistent volume)
+  - Redis
+  - Backend (FastAPI, Alembic migrations, and DB seed)
+  - Frontend (React + Vite, served by nginx)
+
+### 2. Access the App
+- **Frontend:** http://127.0.0.1 (served by nginx)
+- **Backend API:** http://127.0.0.1:8000
+- **API Docs:** http://127.0.0.1:8000/docs
+
+### 3. Database Seed Data
+- On first run, the backend will automatically seed the database with 3 books and 2–3 reviews each.
+- To re-seed manually:
+  ```bash
+  docker-compose exec backend python -m app.seed
+  ```
+
+### 4. Stopping and Cleaning Up
+- To stop all services:
+  ```bash
+  docker-compose down
+  ```
+- To remove all data (including the database):
+  ```bash
+  docker-compose down -v
+  ```
 
 ---

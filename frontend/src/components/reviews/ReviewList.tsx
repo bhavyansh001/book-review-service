@@ -24,7 +24,7 @@ const ReviewList: React.FC<ReviewListProps> = ({ bookId }) => {
     limit: DEFAULT_PAGE_SIZE
   };
 
-  const { reviews, total, loading, error, refetch } = useReviews(bookId, paginationParams, refreshKey);
+  const { reviews, total, loading, error } = useReviews(bookId, paginationParams, refreshKey);
 
   // Ensure reviews is always an array
   const safeReviews = Array.isArray(reviews) ? reviews : [];
