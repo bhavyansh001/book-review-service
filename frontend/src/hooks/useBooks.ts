@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import type { Book, PaginationParams } from '../types';
 import { bookService } from '../services/bookService';
 
-export const useBooks = (params: PaginationParams) => {
+export const useBooks = (params: PaginationParams, refreshKey?: number) => {
   const [books, setBooks] = useState<Book[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -23,8 +23,7 @@ export const useBooks = (params: PaginationParams) => {
 
   useEffect(() => {
     fetchBooks();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [params.skip, params.limit]);
+  }, [params.skip, params.limit, refreshKey]);
 
   return { books, loading, error, refetch: fetchBooks };
 };

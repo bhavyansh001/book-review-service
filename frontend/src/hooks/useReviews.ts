@@ -2,31 +2,32 @@ import { useState, useEffect } from 'react';
 import type { Review, PaginationParams } from '../types';
 import { reviewService } from '../services/reviewService';
 
-export const useReviews = (bookId: number, params: PaginationParams) => {
+export const useReviews = (bookId: number, params: PaginationParams, refreshKey?: number) => {
   const [reviews, setReviews] = useState<Review[]>([]);
+  const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const fetchReviews = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        const data = await reviewService.getReviews(bookId, params);
-        setReviews(data);
-      } catch (err) {
-        setError('Failed to fetch reviews');
-        console.error(err);
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchReviews = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await reviewService.getReviews(bookId, params);
+      setReviews(data.items);
+      setTotal(data.total);
+    } catch (err) {
+      setError('Failed to fetch reviews');
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
     if (bookId) {
       fetchReviews();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [bookId, params.skip, params.limit]);
+  }, [bookId, params.skip, params.limit, refreshKey]);
 
-  return { reviews, loading, error };
+  return { reviews, total, loading, error, refetch: fetchReviews };
 };

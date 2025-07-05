@@ -2,9 +2,11 @@ import api from './api';
 import type { Review, ReviewFormData, PaginationParams } from '../types';
 
 export const reviewService = {
-  async getReviews(bookId: number, params: PaginationParams): Promise<Review[]> {
+  async getReviews(bookId: number, params: PaginationParams): Promise<{ items: Review[]; total: number }> {
     const response = await api.get(`/books/${bookId}/reviews`, { params });
-    return response.data;
+    // The backend returns a book object with a 'reviews' array
+    const reviews = Array.isArray(response.data.reviews) ? response.data.reviews : [];
+    return { items: reviews, total: reviews.length };
   },
 
   async getReview(reviewId: number): Promise<Review> {
