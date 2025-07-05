@@ -62,119 +62,93 @@ const BookForm: React.FC<BookFormProps> = ({ book, onSubmit }) => {
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: name === 'publication_year' ? (value ? parseInt(value, 10) : undefined) : value
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">
-        {book ? 'Edit Book' : 'Add New Book'}
-      </h1>
-
-      {error && (
-        <div className="mb-4 p-4 bg-red-50 border border-red-200 rounded-md">
-          <p className="text-red-700">{error}</p>
-        </div>
-      )}
-
-      <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="max-w-2xl mx-auto bg-white rounded-xl shadow-lg p-8 space-y-6">
+      <h2 className="text-2xl font-bold text-gray-900 mb-2">{book ? 'Edit Book' : 'Add New Book'}</h2>
+      {error && <div className="text-red-600 text-sm mb-2">{error}</div>}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
         <div>
-          <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
-            Title *
-          </label>
+          <label className="block text-gray-700 font-medium mb-1">Title<span className="text-red-500">*</span></label>
           <input
             type="text"
-            id="title"
             name="title"
             value={formData.title}
             onChange={handleChange}
             required
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-black"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            placeholder="Book title"
           />
         </div>
-
         <div>
-          <label htmlFor="author" className="block text-sm font-medium text-gray-700 mb-2">
-            Author *
-          </label>
+          <label className="block text-gray-700 font-medium mb-1">Author<span className="text-red-500">*</span></label>
           <input
             type="text"
-            id="author"
             name="author"
             value={formData.author}
             onChange={handleChange}
             required
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-black"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            placeholder="Author name"
           />
         </div>
-
         <div>
-          <label htmlFor="isbn" className="block text-sm font-medium text-gray-700 mb-2">
-            ISBN
-          </label>
-          <input
-            type="text"
-            id="isbn"
-            name="isbn"
-            value={formData.isbn}
-            onChange={handleChange}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-black"
-          />
-        </div>
-
-        <div>
-          <label htmlFor="publication_year" className="block text-sm font-medium text-gray-700 mb-2">
-            Publication Year
-          </label>
+          <label className="block text-gray-700 font-medium mb-1">Publication Year</label>
           <input
             type="number"
-            id="publication_year"
             name="publication_year"
             value={formData.publication_year || ''}
             onChange={handleChange}
-            min="1000"
-            max={new Date().getFullYear()}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-black"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            placeholder="e.g. 2022"
+            min={0}
           />
         </div>
-
-        <div>
-          <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
-            Description
-          </label>
+        <div className="sm:col-span-2">
+          <label className="block text-gray-700 font-medium mb-1">ISBN</label>
+          <input
+            type="text"
+            name="isbn"
+            value={formData.isbn}
+            onChange={handleChange}
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            placeholder="ISBN number"
+          />
+        </div>
+        <div className="sm:col-span-2">
+          <label className="block text-gray-700 font-medium mb-1">Description</label>
           <textarea
-            id="description"
             name="description"
             value={formData.description}
             onChange={handleChange}
             rows={4}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 text-black"
+            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none"
+            placeholder="Book description"
           />
         </div>
-
-        <div className="flex space-x-4">
-          <button
-            type="submit"
-            disabled={loading}
-            className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {loading ? 'Saving...' : (book ? 'Update Book' : 'Add Book')}
-          </button>
-          <button
-            type="button"
-            onClick={() => navigate('/')}
-            className="flex-1 bg-gray-300 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-400"
-          >
-            Cancel
-          </button>
-        </div>
-      </form>
-    </div>
+      </div>
+      <div className="flex justify-end gap-4 pt-4">
+        <button
+          type="button"
+          onClick={() => navigate(-1)}
+          className="px-5 py-2 rounded-md border border-gray-300 text-gray-700 bg-white hover:bg-gray-100 transition-colors"
+          disabled={loading}
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          className="px-6 py-2 rounded-md bg-blue-600 text-white font-semibold hover:bg-blue-700 transition-colors shadow"
+          disabled={loading}
+        >
+          {loading ? 'Saving...' : book ? 'Update Book' : 'Add Book'}
+        </button>
+      </div>
+    </form>
   );
 };
 
