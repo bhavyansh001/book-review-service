@@ -21,6 +21,9 @@ A professional-grade backend API for a Book Review application, built with FastA
 - [API Documentation](#api-documentation)
 - [Project Scripts](#project-scripts)
 - [Troubleshooting](#troubleshooting)
+- [Frontend Setup & Running](#frontend-setup--running)
+- [Running Both Backend & Frontend Together (Dev)](#running-both-backend--frontend-together-dev)
+- [Dockerized Deployment (Recommended)](#dockerized-deployment-recommended)
 
 ---
 
@@ -203,5 +206,84 @@ Interactive API docs are available at:
 - **Migrations not applying:** Ensure your `alembic.ini` and `app/config.py` point to the correct database.
 - **Redis errors:** Make sure `redis-server` is running and `REDIS_URL` is set.
 - **Tests failing:** Make sure your test database is set up and migrations are applied.
+
+---
+
+## Frontend Setup & Running
+
+The frontend is a modern React + TypeScript app (Vite).
+
+### 1. Install Frontend Dependencies
+
+```bash
+cd frontend
+npm install
+```
+
+### 2. Run the Frontend in Development
+
+```bash
+npm run dev
+```
+
+The app will be available at: [http://localhost:5173](http://localhost:5173)
+
+---
+
+## Running Both Backend & Frontend Together (Dev)
+
+A helper script is provided at the project root to run both services in development mode:
+
+```bash
+./run-dev.sh
+```
+
+- This will start the backend (FastAPI) and frontend (Vite) concurrently.
+- Make sure you have installed backend and frontend dependencies first.
+- Press Ctrl+C to stop both services.
+
+---
+
+## Dockerized Deployment
+
+### Prerequisites
+- [Docker](https://docs.docker.com/get-docker/) and [Docker Compose](https://docs.docker.com/compose/install/) installed
+- No other services running on ports 80, 8000, 5432, or 6379
+
+### 1. Build and Start All Services
+
+From the project root:
+
+```bash
+docker-compose up --build
+```
+
+- This will build and start:
+  - PostgreSQL (with persistent volume)
+  - Redis
+  - Backend (FastAPI, Alembic migrations, and DB seed)
+  - Frontend (React + Vite, served by nginx)
+
+### 2. Access the App
+- **Frontend:** http://127.0.0.1 (served by nginx)
+- **Backend API:** http://127.0.0.1:8000
+- **API Docs:** http://127.0.0.1:8000/docs
+
+### 3. Database Seed Data
+- On first run, the backend will automatically seed the database with 3 books and 2–3 reviews each.
+- To re-seed manually:
+  ```bash
+  docker-compose exec backend python -m app.seed
+  ```
+
+### 4. Stopping and Cleaning Up
+- To stop all services:
+  ```bash
+  docker-compose down
+  ```
+- To remove all data (including the database):
+  ```bash
+  docker-compose down -v
+  ```
 
 ---
