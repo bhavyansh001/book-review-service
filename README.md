@@ -1,6 +1,6 @@
-# Book Review Service – Backend
+# Book Review Service
 
-A professional-grade backend API for a Book Review application, built with FastAPI, SQLAlchemy, Alembic, and PostgreSQL. This service provides RESTful endpoints for managing books and their reviews, with robust validation, error handling, and database integration.
+A professional-grade backend API (along with React + TS frontend) for a Book Review application, built with FastAPI, SQLAlchemy, Alembic, and PostgreSQL. This service provides RESTful endpoints for managing books and their reviews, with robust validation, error handling, and database integration.
 
 ---
 
